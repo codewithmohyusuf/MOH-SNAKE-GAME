@@ -1,0 +1,303 @@
+/* ============================================================
+   styles.css — Snake Game Stylesheet
+   ============================================================ */
+
+
+/* ===== RESET & BASE =====
+   Remove default browser spacing and make everything
+   use border-box sizing (padding included in width/height) */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Stop the page from scrolling when arrow keys are pressed */
+html, body {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* ===== BODY =====
+   Dark gradient background, center everything on the screen */
+body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f172a, #1e293b, #020617);
+  font-family: Arial, sans-serif;
+}
+
+
+/* ===== GAME CONTAINER =====
+   The white-ish frosted card that holds everything */
+#game-container {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 24px 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+
+/* ===== TITLE ===== */
+.title {
+  color: white;
+  font-size: 36px;
+  letter-spacing: 3px;
+  font-family: 'Permanent Marker', cursive;
+  margin-bottom: 16px;
+}
+
+
+/* ===== SCORE SECTION =====
+   Three boxes in a row showing Score, Best, Speed */
+.score-section {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+/* Each individual score box */
+.score-box {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 8px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 70px;
+}
+
+/* Small label above the number e.g. "SCORE" */
+.score-label {
+  color: #94a3b8;
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+/* The actual number */
+.score-value {
+  color: white;
+  font-size: 24px;
+  font-family: 'Permanent Marker', cursive;
+}
+
+
+/* ===== BOARD WRAPPER =====
+   position: relative lets us place the overlay on top of the canvas */
+.board-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* ===== GAME CANVAS ===== */
+#gameBoard {
+  display: block;
+  width: min(90vw, 400px);
+  height: min(90vw, 400px);
+  border: 3px solid #38bdf8;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+  background-color: #0f172a;
+}
+
+
+/* ===== START / GAME OVER OVERLAY =====
+   Sits on top of the canvas. Hidden during gameplay. */
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.60);
+  border-radius: 10px;
+  gap: 10px;
+}
+
+/* We add this class with JS to hide the overlay when game runs */
+#overlay.hidden {
+  display: none;
+}
+
+#overlay p {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Permanent Marker', cursive;
+}
+
+#overlay small {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+}
+
+
+/* ===== CONTROL BUTTONS ROW ===== */
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+/* Style for all buttons */
+.controls button {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  background: #38bdf8;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.controls button:hover {
+  background: #0ea5e9;
+  transform: scale(1.05);
+}
+
+.controls button:active {
+  transform: scale(0.97);
+}
+
+/* Disabled pause button looks greyed out */
+.controls button:disabled {
+  background: #475569;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Speed dropdown */
+.controls select {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  background: #1e293b;
+  color: white;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Mute button is a bit smaller / square-ish */
+#muteBtn {
+  padding: 8px 12px !important;
+  font-size: 18px !important;
+}
+
+
+/* ===== D-PAD (MOBILE ARROW BUTTONS) =====
+   Hidden by default on desktop.
+   Shown only on tablets and phones via media query below. */
+.dpad {
+  display: none; /* Hidden on desktop */
+  grid-template-columns: repeat(3, 60px);
+  grid-template-rows: repeat(3, 60px);
+  gap: 6px;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+/* Empty cells between the arrow buttons */
+.dpad-blank {
+  width: 60px;
+  height: 60px;
+}
+
+/* Each arrow button */
+.dpad-btn {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: #38bdf8;
+  color: white;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.1s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none; /* Prevents scroll interference on touch */
+}
+
+.dpad-btn:active {
+  transform: scale(0.92);
+  background: #0ea5e9;
+}
+
+
+/* ===== CREATOR CREDIT ===== */
+.creator {
+  color: #94a3b8;
+  font-size: 13px;
+  margin-top: 16px;
+}
+
+
+/* ===== MEDIA QUERY: TABLETS AND PHONES =====
+   On screens 1024px wide or smaller, show the d-pad
+   and shrink some text sizes */
+@media (max-width: 1024px) {
+
+  /* Show the arrow buttons */
+  .dpad {
+    display: grid;
+  }
+
+  /* Smaller title on mobile */
+  .title {
+    font-size: 26px;
+  }
+
+  /* Smaller score numbers on mobile */
+  .score-value {
+    font-size: 20px;
+  }
+
+}
+
+/* Extra small phones */
+@media (max-width: 400px) {
+  #game-container {
+    padding: 16px 10px;
+  }
+
+  .score-box {
+    min-width: 55px;
+    padding: 6px 10px;
+  }
+}
+
+#game-container{
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}

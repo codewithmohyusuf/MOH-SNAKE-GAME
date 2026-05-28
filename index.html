@@ -1,20 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <!-- This makes the page look good on phones and tablets -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Snake Game</title>
+
+  <!-- Link to our stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Google Font for the title -->
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet" />
 </head>
 <body>
 
+  <!-- ===== MAIN WRAPPER ===== -->
   <div id="game-container">
-    <canvas id="gameBoard" width="400" height="400">
 
-    </canvas>
-    <div id="scoreText"> 0</div>
-    <button id="resetBtn">Reset</button>
-  </div>
- <script src="index.js"></script>
+    <!-- Game title -->
+    <h1 class="title">SNAKE GAME</h1>
+
+    <!-- ===== SCORE SECTION ===== -->
+    <!-- We show current score and best score side by side -->
+    <div class="score-section">
+      <div class="score-box">
+        <span class="score-label">SCORE</span>
+        <span class="score-value" id="scoreText">0</span>
+      </div>
+      <div class="score-box">
+        <span class="score-label">BEST</span>
+        <span class="score-value" id="bestText">0</span>
+      </div>
+      <div class="score-box">
+        <span class="score-label">SPEED</span>
+        <span class="score-value" id="speedText">1x</span>
+      </div>
+    </div>
+
+    <!-- ===== GAME BOARD ===== -->
+    <!-- The canvas is where we draw everything using JavaScript -->
+    <div class="board-wrapper">
+      <canvas id="gameBoard" width="400" height="400"></canvas>
+
+      <!-- This overlay shows at the start and game over -->
+      <div id="overlay">
+        <p id="overlayTitle">SNAKE</p>
+        <small id="overlaySub">Press Start or Space to play</small>
+      </div>
+    </div>
+
+    <!-- ===== CONTROL BUTTONS ===== -->
+    <div class="controls">
+
+      <!-- Difficulty dropdown -->
+      <select id="speedSelect">
+        <option value="200">Slow</option>
+        <option value="130" selected>Normal</option>
+        <option value="80">Fast</option>
+        <option value="50">Insane</option>
+      </select>
+
+      <!-- Start / Restart button -->
+      <button id="startBtn">Start</button>
+
+      <!-- Pause button — disabled until game starts -->
+      <button id="pauseBtn" disabled>Pause</button>
+
+      <!-- Mute / Unmute sound button -->
+      <button id="muteBtn">🔊</button>
+
+    </div>
+
+    <!-- ===== MOBILE D-PAD ===== -->
+    <!--
+      These arrow buttons are hidden on desktop screens.
+      On tablets and phones (max-width: 1024px) they become visible.
+      We use CSS media queries in styles.css to control this.
+    -->
+    <div class="dpad" id="dpad">
+
+      <!-- Top row: just the UP button in the middle -->
+      <div class="dpad-blank"></div>
+      <button class="dpad-btn" id="dUp">&#8593;</button>
+      <div class="dpad-blank"></div>
+
+      <!-- Middle row: LEFT, empty center, RIGHT -->
+      <button class="dpad-btn" id="dLeft">&#8592;</button>
+      <div class="dpad-blank"></div>
+      <button class="dpad-btn" id="dRight">&#8594;</button>
+
+      <!-- Bottom row: just the DOWN button in the middle -->
+      <div class="dpad-blank"></div>
+      <button class="dpad-btn" id="dDown">&#8595;</button>
+      <div class="dpad-blank"></div>
+
+    </div>
+
+    <!-- Footer credit -->
+    <p class="creator">Developed by Mohammed Shittu Yusuf</p>
+
+  </div><!-- end #game-container -->
+
+  <!-- Link to our JavaScript file — placed at the bottom so HTML loads first -->
+  <script src="index.js"></script>
+
 </body>
 </html>
