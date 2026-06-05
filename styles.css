@@ -2,48 +2,52 @@
    styles.css — Snake Game Stylesheet
    ============================================================ */
 
-
-/* ===== RESET & BASE =====
-   Remove default browser spacing and make everything
-   use border-box sizing (padding included in width/height) */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Stop the page from scrolling when arrow keys are pressed */
 html, body {
   overflow: hidden;
-  touch-action: none;
 }
 
-/* ===== BODY =====
-   Dark gradient background, center everything on the screen */
+body {
+  touch-action: manipulation;
+}
+
 body {
   width: 100%;
-  height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding:
+    max(12px, env(safe-area-inset-top))
+    12px
+    max(12px, env(safe-area-inset-bottom))
+    12px;
+  overflow: hidden;
   background: linear-gradient(135deg, #0f172a, #1e293b, #020617);
   font-family: Arial, sans-serif;
 }
 
-
-/* ===== GAME CONTAINER =====
-   The white-ish frosted card that holds everything */
 #game-container {
+  width: min(100%, 520px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 24px 20px;
-  border-radius: 20px;
+  background: rgba(255, 255, 255, .05);
   backdrop-filter: blur(10px);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  padding: 16px;
+  max-height: 100%;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0, 0, 0, .5);
 }
 
-
-/* ===== TITLE ===== */
 .title {
   color: white;
   font-size: 36px;
@@ -52,17 +56,15 @@ body {
   margin-bottom: 16px;
 }
 
-
-/* ===== SCORE SECTION =====
-   Three boxes in a row showing Score, Best, Speed */
 .score-section {
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 8px;
+  flex-wrap: nowrap;
   margin-bottom: 14px;
 }
 
-/* Each individual score box */
 .score-box {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -74,7 +76,6 @@ body {
   min-width: 70px;
 }
 
-/* Small label above the number e.g. "SCORE" */
 .score-label {
   color: #94a3b8;
   font-size: 10px;
@@ -82,35 +83,24 @@ body {
   margin-bottom: 2px;
 }
 
-/* The actual number */
 .score-value {
   color: white;
   font-size: 24px;
   font-family: 'Permanent Marker', cursive;
 }
 
-
-/* ===== BOARD WRAPPER =====
-   position: relative lets us place the overlay on top of the canvas */
 .board-wrapper {
   position: relative;
   display: inline-block;
 }
 
-/* ===== GAME CANVAS ===== */
 #gameBoard {
+  width: min(78vw, 380px);
+  height: min(78vw, 380px);
+  aspect-ratio: 1;
   display: block;
-  width: min(90vw, 400px);
-  height: min(90vw, 400px);
-  border: 3px solid #38bdf8;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-  background-color: #0f172a;
 }
 
-
-/* ===== START / GAME OVER OVERLAY =====
-   Sits on top of the canvas. Hidden during gameplay. */
 #overlay {
   position: absolute;
   top: 0;
@@ -126,7 +116,6 @@ body {
   gap: 10px;
 }
 
-/* We add this class with JS to hide the overlay when game runs */
 #overlay.hidden {
   display: none;
 }
@@ -143,19 +132,10 @@ body {
   font-size: 13px;
 }
 
-
-/* ===== CONTROL BUTTONS ROW ===== */
-.controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-top: 16px;
-  flex-wrap: wrap;
-}
-
-/* Style for all buttons */
-.controls button {
+/* FIX: was ".controls button" which never matched — changed to target actual elements */
+.game-controls button,
+#startBtn,
+#pauseBtn {
   padding: 8px 18px;
   border: none;
   border-radius: 10px;
@@ -167,75 +147,84 @@ body {
   transition: background 0.2s, transform 0.1s;
 }
 
-.controls button:hover {
+.game-controls button:hover,
+#startBtn:hover,
+#pauseBtn:hover {
   background: #0ea5e9;
   transform: scale(1.05);
 }
 
-.controls button:active {
+.game-controls button:active,
+#startBtn:active,
+#pauseBtn:active {
   transform: scale(0.97);
 }
 
-/* Disabled pause button looks greyed out */
-.controls button:disabled {
+#pauseBtn:disabled {
   background: #475569;
   cursor: not-allowed;
   transform: none;
 }
 
-/* Speed dropdown */
-.controls select {
-  padding: 8px 12px;
+.speed-wrapper {
+  flex: 1;
+}
+
+.speed-wrapper select {
+  height: 50px;
+  padding: 0 10px;
   border: none;
   border-radius: 10px;
-  font-size: 14px;
   background: #1e293b;
   color: white;
-  cursor: pointer;
-  outline: none;
 }
 
-/* Mute button is a bit smaller / square-ish */
 #muteBtn {
-  padding: 8px 12px !important;
-  font-size: 18px !important;
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 12px;
+  background: #38bdf8;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
 }
 
-
-/* ===== D-PAD (MOBILE ARROW BUTTONS) =====
-   Hidden by default on desktop.
-   Shown only on tablets and phones via media query below. */
-.dpad {
-  display: none; /* Hidden on desktop */
-  grid-template-columns: repeat(3, 60px);
-  grid-template-rows: repeat(3, 60px);
-  gap: 6px;
-  margin-top: 16px;
+/* ===== DESKTOP: Start + Pause side by side, no dpad ===== */
+.game-controls {
+  display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
 }
 
-/* Empty cells between the arrow buttons */
-.dpad-blank {
-  width: 60px;
-  height: 60px;
+/* Hide all dpad elements on desktop by default */
+.dpad-only {
+  display: none !important;
 }
 
-/* Each arrow button */
+.dpad-row {
+  display: none;
+  grid-template-columns: repeat(3, 70px);
+  justify-content: center;
+  gap: 14px;
+  margin-top: 12px;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+}
+
 .dpad-btn {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border: none;
   border-radius: 50%;
   background: #38bdf8;
   color: white;
-  font-size: 26px;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-  transition: transform 0.1s, background 0.2s;
+  font-size: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  touch-action: none; /* Prevents scroll interference on touch */
+  cursor: pointer;
 }
 
 .dpad-btn:active {
@@ -243,61 +232,58 @@ body {
   background: #0ea5e9;
 }
 
-
-/* ===== CREATOR CREDIT ===== */
 .creator {
-  color: #94a3b8;
-  font-size: 13px;
-  margin-top: 16px;
+  margin-top: 10px;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 6px);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
 }
 
-
-/* ===== MEDIA QUERY: TABLETS AND PHONES =====
-   On screens 1024px wide or smaller, show the d-pad
-   and shrink some text sizes */
+/* ===== MOBILE: show dpad, switch game-controls back to 3-column grid ===== */
 @media (max-width: 1024px) {
+  .title { font-size: 26px; }
+  .score-value { font-size: 20px; }
 
-  /* Show the arrow buttons */
-  .dpad {
+  /* Reveal dpad elements */
+  .dpad-only {
+    display: flex !important;
+  }
+
+  .dpad-row {
     display: grid;
   }
 
-  /* Smaller title on mobile */
-  .title {
-    font-size: 26px;
-  }
-
-  /* Smaller score numbers on mobile */
-  .score-value {
-    font-size: 20px;
-  }
-
-}
-
-/* Extra small phones */
-@media (max-width: 400px) {
-  #game-container {
-    padding: 16px 10px;
-  }
-
-  .score-box {
-    min-width: 55px;
-    padding: 6px 10px;
+  /* Restore 3-column layout so Up arrow sits between Start and Pause */
+  .game-controls {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
   }
 }
 
-#game-container{
-  animation: fadeIn 0.5s ease;
+@media (max-width: 768px) {
+  #game-container { padding: 12px; }
+  .title { font-size: 24px; margin-bottom: 10px; }
+  .score-section { gap: 8px; }
+  .dpad-btn { width: 56px; height: 56px; }
+  .dpad-row { grid-template-columns: repeat(3, 56px); }
 }
 
-@keyframes fadeIn{
-  from{
-    opacity:0;
-    transform:translateY(20px);
-  }
+@media (max-width: 430px) {
+  .title { font-size: 24px; }
+  .score-box { min-width: 55px; }
+  .game-controls { grid-template-columns: 1fr 60px 1fr; }
+  .dpad-row { grid-template-columns: repeat(3, 60px); }
+  .dpad-btn { width: 60px; height: 60px; font-size: 26px; }
+  #gameBoard { width: min(76vw, 340px); height: min(76vw, 340px); }
+}
 
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+@media (max-width: 480px) {
+  #gameBoard { width: min(78vw, 340px); height: min(78vw, 340px); }
+  .score-box { min-width: 58px; padding: 6px 10px; }
+  .score-value { font-size: 18px; }
+  .dpad-btn { width: 60px; height: 60px; font-size: 24px; }
+  .dpad-row { grid-template-columns: repeat(3, 60px); }
+  .score-box:last-of-type { display: none; }
 }
